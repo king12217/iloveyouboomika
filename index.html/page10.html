@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=320, initial-scale=1">
+  <title>Will You Be Mine?</title>
+  <style>
+    html, body {margin:0; padding:0; background:radial-gradient(circle,#ffe2f4 70%,#ddf6ff 100%); overflow:hidden; width:100vw; height:100vh;}
+    #three-container {width:100vw; height:100vh; position:fixed; left:0; top:0; z-index:1;}
+    #proposalText {
+      position: fixed;
+      left: 50%; top:7vw; width:90vw; max-width:600px; min-width:200px;
+      transform:translateX(-50%);
+      text-align:center; z-index: 3; pointer-events:none;
+      font-family: 'Dancing Script', cursive; font-size: 2.0em; color:#c02ba6;
+      text-shadow:0 2px 10px #fffdfc9f;
+      font-weight:bold; letter-spacing: 0.12em; user-select: none;
+      word-break: break-word;
+      line-height:1.3;
+    }
+    #yesBtn {
+      position: fixed; left:50%; bottom:7.3%; transform:translateX(-50%);
+      z-index: 5; background: linear-gradient(100deg,#fd85b0,#fff7fb); color:#d72a87;
+      font-family:'Dancing Script',cursive;font-size:1.56em; border:none; border-radius:36px;
+      box-shadow:0 3px 24px #fbccff9f; padding:21px 62px; cursor:pointer; outline:none; transition:background .18s, box-shadow .16s;
+      font-weight:bold; letter-spacing:.04em;
+    }
+    #yesBtn:hover {background:linear-gradient(99deg,#e12be7,#fff3ff); color:#fff;box-shadow:0 7px 28px #e27ffb8e;}
+    #fireworks-canvas {position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:11;pointer-events:none;}
+    .nav-group {z-index:16;position:fixed;bottom:5px;right:0;left:0;width:100vw;text-align:center;}
+    .nav-link {display:inline-block; margin:0 8px; font-size:1.06em; color:#ad35b2; background:#faf2fc; border-radius:16px; padding:8px 26px; box-shadow:0 2px 10px #dfb6ff33; text-decoration:none; transition:background .13s;}
+    .nav-link:hover {background:#ffd1fa;color:#763c99;}
+    @media (max-width: 680px) {
+      #proposalText { font-size: 1.1em; top:3vw; width:94vw;}
+      #yesBtn {font-size:1.12em;padding:13px 22px;}
+    }
+  </style>
+</head>
+<body>
+  <div id="three-container"></div>
+  <div id="proposalText">
+    Will you be my forever?<br>
+    <span style="font-size:0.65em; font-weight:normal; color:#b45cba;">
+      I want to share my heart and dreams, holding your hand through every sunrise and starlit night.
+    </span>
+  </div>
+  <button id="yesBtn" onclick="celebrate()">Yes, I will! 💍</button>
+  <canvas id="fireworks-canvas"></canvas>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.141.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.141.0/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // --- 3D Setup ---
+    const container = document.getElementById("three-container");
+    const scene = new THREE.Scene();
+    scene.background = null;
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 700);
+    camera.position.set(0, 22, 110);
+
+    const renderer = new THREE.WebGLRenderer({alpha:true, antialias:true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+    container.appendChild(renderer.domElement);
+
+    // Card Backdrop
+    const cardGeo = new THREE.BoxGeometry(62, 42, 8, 2, 2, 2);
+    const cardMat = new THREE.MeshPhysicalMaterial({
+      color: 0xf6e1fa, metalness:0.30, roughness:0.08, transmission:0.85, clearcoat:0.69, opacity:0.99, transparent:true,
+      sheen:0.64, sheenColor:new THREE.Color('#f7aeff')
+    });
+    const card = new THREE.Mesh(cardGeo, cardMat);
+    scene.add(card);
+
+    // Add floating sparkling heart
+    const heartShape = new THREE.Shape();
+    heartShape.moveTo(0,2.8);
+    heartShape.bezierCurveTo(7.5,13,22,-4,0,-17);
+    heartShape.bezierCurveTo(-22,-4,-7.5,13,0,2.8);
+    const heartGeo = new THREE.ExtrudeGeometry(heartShape, {depth:4, bevelEnabled:true, steps:2,bevelThickness:2,bevelSize:2,bevelSegments:3});
+    const heartMat = new THREE.MeshPhysicalMaterial({
+      color: 0xfa54c6, metalness:0.12, roughness:0.19, transmission:0.52, opacity:0.95, transparent:true,
+      sheen:1.0, sheenColor:new THREE.Color('#de2bad')
+    });
+    const heart = new THREE.Mesh(heartGeo, heartMat);
+    heart.position.set(0,5,8); heart.rotation.x = -0.38;
+    heart.scale.set(1.1,1.22,0.4);
+    scene.add(heart);
+
+    // Add floating ring
+    const ringGeo = new THREE.TorusGeometry(9.5,1.7,24,60);
+    const ringMat = new THREE.MeshPhysicalMaterial({
+      color: 0xffe661, roughness:0.11, metalness:.97, specularIntensity:0.7, reflectivity:0.88, transmission:0.25,
+      sheen:0.5, sheenColor:new THREE.Color('#ff9fae')
+    });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.position.set(0,-5.5,10);
+    ring.rotation.x = Math.PI/2-0.11; ring.rotation.y=-0.28;
+    scene.add(ring);
+
+    // Glow/lights
+    const amb = new THREE.AmbientLight(0xffffff, 0.8); scene.add(amb);
+    const pt1 = new THREE.PointLight(0xfc8bf5,1,120); pt1.position.set(60,70,60); scene.add(pt1);
+    const pt2 = new THREE.PointLight(0x83a6ff,0.63,150); pt2.position.set(-80, -120, 80); scene.add(pt2);
+    const pt3 = new THREE.PointLight(0xffffff,0.61,220); pt3.position.set(0, 15,120); scene.add(pt3);
+
+    // Animation
+    function animate() {
+      card.rotation.y = Math.sin(Date.now()/1900)*0.17;
+      heart.position.y = 7+Math.sin(Date.now()/900)*2.2;
+      heart.rotation.y += 0.014;
+      heart.material.opacity = 0.85 + 0.15*Math.abs(Math.sin(Date.now()/940));
+      ring.rotation.z += 0.008; ring.position.x = Math.sin(Date.now()/950)*7.8;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Orbit controls for interactive drag
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = false; controls.enableDamping = true; controls.dampingFactor=0.09; controls.maxPolarAngle = 1.48;
+
+    window.addEventListener('resize',()=>{
+      camera.aspect=window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth,window.innerHeight);
+    });
+
+    // ----- Firework Celebration on "Yes" -----
+    function celebrate(){
+      document.getElementById("yesBtn").style.display = "none";
+      fireworkBurst();
+    }
+
+    // Simple firework burst animation (2D effect)
+    const fwCanvas = document.getElementById("fireworks-canvas"), fwSize=window.innerWidth, fwCtx = fwCanvas.getContext("2d");
+    fwCanvas.width = fwSize; fwCanvas.height = window.innerHeight;
+    window.addEventListener('resize', ()=>{fwCanvas.width=window.innerWidth;fwCanvas.height=window.innerHeight;});
+    function fireworkBurst(){
+      let particles = [];
+      let centerX = window.innerWidth/2, centerY = window.innerHeight/2.3;
+      for(let i=0;i<62;i++){
+        let angle = Math.random()*2*Math.PI, speed = 3.5+Math.random()*2;
+        let color = hsl(${Math.random()*355},90%,78%);
+        particles.push({x:centerX,y:centerY,dx:Math.cos(angle)*speed,dy:Math.sin(angle)*speed,color:color,l:0+Math.random()*4});
+      }
+      function renderFirework(){
+        fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
+        particles.forEach(p=>{
+          fwCtx.beginPath();
+          fwCtx.arc(p.x,p.y,5,0,2*Math.PI);
+          fwCtx.fillStyle = p.color;
+          fwCtx.fill();
+          p.x += p.dx; p.y += p.dy; p.l += 0.17;
+          p.dx *= 0.97; p.dy *= 0.97; p.dy += 0.028;
+        });
+        if(particles[0] && particles[0].l<37) requestAnimationFrame(renderFirework);
+      }
+      renderFirework();
+    }
+  </script>
+  <div class="nav-group">
+    <a class="nav-link" href="page9.html">⬅ Previous</a>
+    <!-- Next button removed as requested -->
+  </div>
+</body>
+</html>

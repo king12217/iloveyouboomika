@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=320, initial-scale=1" />
+  <title>Home - My Love Website</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Roboto:wght@400;700&display=swap');
+    html,body {margin:0;padding:0;background:linear-gradient(120deg,#fce1e4 0%,#ffe9ec 100%);overflow:hidden;height:100%;}
+    .container {width:100vw;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;position:relative;}
+    h1 {font-family:'Dancing Script',cursive;font-size:3.3rem;color:#e24890;text-shadow:1px 1px 12px #faceda;}
+    .typewriter {font-size:1.16rem;margin-top:13px;height:28px;white-space:nowrap;border-right: 0.12em solid #e24890;}
+    canvas#love3d {width:320px;height:220px;border-radius:20px;box-shadow:0 9px 24px #ffbde6a0;margin:40px 0 32px 0;}
+    .main-btn {display:inline-block;margin-top:19px;padding:14px 38px;font-size:1.18rem;
+      font-family:'Roboto',sans-serif;background:linear-gradient(90deg,#ff86ae 10%,#ffdcf1 90%);
+      color:#b0205a;border:none;border-radius:35px;box-shadow:0 2px 15px #ffc5e62b;
+      text-decoration:none;font-weight:bold;letter-spacing:0.03em;transition:background 0.22s, transform 0.16s;}
+    .main-btn:hover {background:linear-gradient(90deg,#ffa9ce 20%,#ffe2d8 100%);transform:translateY(-2px) scale(1.04);color: #de3c7a;}
+    .bubble {position:absolute;border-radius:50%;background:rgba(255,105,180,0.3);animation:rise linear forwards;pointer-events:none;filter:drop-shadow(0 0 5px #f48fb1);}
+    @keyframes rise {0% {transform: translateY(0); opacity: 0.8;} 100% {transform: translateY(-120vh); opacity: 0;}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Love, My Heart</h1>
+    <div class="typewriter" id="typewriterText"></div>
+    <canvas id="love3d"></canvas>
+    <a href="page2.html" class="main-btn">Next ➔</a>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.141.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.141.0/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.141.0/examples/js/geometries/TextGeometry.js"></script>
+  <script>
+    // Typewriter effect
+    const text = "Welcome to a world where love sparkles in every letter...";
+    const typewriterText = document.getElementById('typewriterText');
+    let idx = 0;
+    function typeWriter() {
+      if (idx < text.length) { typewriterText.textContent += text.charAt(idx); idx++; setTimeout(typeWriter, 65);}
+      else { setTimeout(()=>{typewriterText.textContent='';idx=0;typeWriter();}, 2500);}
+    }
+    typeWriter();
+
+    // Animated "LOVE" text (3D)
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 320/220, 0.1, 1000);
+    camera.position.z = 150;
+    const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('love3d'), antialias: true, alpha: true});
+    renderer.setSize(320,220);
+    const ambientLight = new THREE.AmbientLight(0xffc0cb,0.7); scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff,1.0,300); pointLight.position.set(40,80,140); scene.add(pointLight);
+    let loveTextMesh;
+    const loader = new THREE.FontLoader();
+    loader.load('https://cdn.jsdelivr.net/npm/three@0.141.0/examples/fonts/helvetiker_bold.typeface.json', function(font) {
+      const textGeometry = new THREE.TextGeometry('LOVE', {
+        font: font, size: 28, height: 6, bevelEnabled: true, bevelThickness: 2, bevelSize: 1.2, bevelSegments: 6,
+      }); textGeometry.center();
+      const textMaterial = new THREE.MeshPhongMaterial({
+        color:0xf06292, shininess:120, specular:0xffe0ef, emissive:0xde3c7a, transparent:true, opacity:0.94
+      });
+      loveTextMesh = new THREE.Mesh(textGeometry, textMaterial);
+      loveTextMesh.position.y = 0;
+      scene.add(loveTextMesh);
+    });
+    function animate3d() {
+      requestAnimationFrame(animate3d);
+      if (loveTextMesh) {
+        loveTextMesh.rotation.y += 0.012;
+        loveTextMesh.rotation.x = Math.sin(Date.now()*0.001)*0.08;
+      }
+      renderer.render(scene, camera);
+    }
+    animate3d();
+
+    // Bubble effect
+    function createBubble() {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      const size = Math.random()*20+14;
+      bubble.style.width=size+'px'; bubble.style.height=size+'px';
+      bubble.style.left=Math.random()*window.innerWidth+'px';
+      bubble.style.animationDuration=6+Math.random()*4+'s';
+      document.body.appendChild(bubble);
+      setTimeout(()=>bubble.remove(),10000);
+    }
+    setInterval(createBubble, 350);
+  </script>
+</body>
+</html>

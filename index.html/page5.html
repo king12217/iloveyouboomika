@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=320, initial-scale=1">
+  <title>About Love</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Courgette&family=Roboto:wght@400;700&display=swap');
+    body {margin:0;padding:0;background:linear-gradient(120deg,#fceaff 20%,#ffe6f7 100%); font-family:'Roboto',sans-serif; color:#b03684;}
+    .container {min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    h1 {margin-top:44px;font-family:'Dancing Script',cursive;font-size:2.6em; color:#ea65c4; text-shadow:1px 1px 12px #fcdeec;}
+    .intro {margin-bottom:30px; color:#a8386a; font-size:1.18em;}
+    .quote-box {margin:0 auto 16px auto;background:#fff4fc;border-left:7px solid #ffbde3;border-radius:23px;box-shadow:0 2px 16px #ffb0e529;padding:20px 30px 17px 28px;width:87%;max-width:330px;}
+    .main-quote {font-size:1.23em;font-family:'Courgette',cursive;}
+    .author {display:block;text-align:right;color:#d87498;font-size:.97em;margin-top:11px;}
+    .petals {position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:1;}
+    .nav-group {margin-top:20px;}
+    .nav-link {display:inline-block;margin:0 7px; font-size:1.08em; color:#b8296a; background:#fff2fd; border-radius:22px; padding:9px 28px; box-shadow:0 2px 10px #ffb6c940; text-decoration:none; transition:.17s;}
+    .nav-link:hover {background:#feb6dc;color:#d12777;}
+  </style>
+</head>
+<body>
+  <canvas class="petals" id="petalCanvas"></canvas>
+  <div class="container">
+    <h1>About Love</h1>
+    <div class="intro">Love is more than a feeling—it's the poetry we write with every tiny moment.</div>
+
+    <div class="quote-box">
+      <div class="main-quote">"To love and be loved is to feel the sun from both sides."</div>
+      <span class="author">— David Viscott</span>
+    </div>
+    <div class="quote-box">
+      <div class="main-quote">"You are the rhythm in my silence and the 'one more minute' to every goodnight."</div>
+      <span class="author">— Anonymous</span>
+    </div>
+    <div class="quote-box">
+      <div class="main-quote">"Every glance, every message, every dream—more beautiful because of you."</div>
+      <span class="author">— Yours</span>
+    </div>
+    <div class="quote-box">
+      <div class="main-quote">"The best love is the kind that awakens the soul—making us reach for more, and brings peace to our hearts."</div>
+      <span class="author">— Nicholas Sparks</span>
+    </div>
+    
+    <div class="nav-group">
+      <a class="nav-link" href="page4.html">⬅ Gifts</a>
+      <a class="nav-link" href="page6.html">Love Quotes ➔</a>
+    </div>
+  </div>
+  <script>
+    // Falling petals background
+    const petalCanvas = document.getElementById('petalCanvas'), ctx = petalCanvas.getContext('2d');
+    function resizeC(){petalCanvas.width=window.innerWidth;petalCanvas.height=window.innerHeight;}
+    resizeC(); window.onresize=resizeC;
+    const petals = [];
+    for(let i=0;i<22;i++){
+      petals.push({
+        x:Math.random()*window.innerWidth,
+        y:Math.random()*window.innerHeight,
+        r:14+Math.random()*13,
+        d:Math.random()*2+1,
+        s:Math.random()*1+0.6,
+        wob:Math.random()*Math.PI*2
+      });
+    }
+    function animatePetals(){
+      ctx.clearRect(0,0,petalCanvas.width,petalCanvas.height);
+      petals.forEach(p=>{
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(Math.sin(Date.now()*0.001+p.wob)*0.2);
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.bezierCurveTo(-p.r/4,-p.r,p.r/4,-p.r,p.r,0);
+        ctx.bezierCurveTo(p.r/3,p.r/2,-p.r/3,p.r/2,0,0);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(255,180,223,0.35)";
+        ctx.fill();
+        ctx.restore();
+        p.x+=Math.sin(p.wob+Date.now()*0.0006)*1.1;
+        p.y+=p.d*p.s;
+        if(p.y>window.innerHeight+20){p.y=-22;p.x=Math.random()*window.innerWidth;}
+      });
+      requestAnimationFrame(animatePetals);
+    }
+    animatePetals();
+  </script>
+</body>
+</html>

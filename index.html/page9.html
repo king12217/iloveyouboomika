@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=320, initial-scale=1">
+  <title>My Love Letter</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+    body {margin:0;padding:0;background:linear-gradient(120deg,#f0ecff 0%,#fff0f7 100%);font-family:Roboto,sans-serif;color:#854b91;}
+    .container {min-height:100vh;width:100vw;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    h1 {margin-top:39px;margin-bottom:12px;font-family:'Dancing Script',cursive;font-size:2.27em;color:#c43282;}
+    .desc {margin-bottom:19px;color:#6e4b7d;font-size:1.12em;text-align:center;}
+    .envelope-wrap {perspective:900px;width:100vw;display:flex;flex-direction:column;align-items:center;}
+    .envelope {width:330px;max-width:92vw;height:230px;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.52,2.1,.28,1);}
+    .envelope.open {transform:scale(1.04);}
+    .lid {position:absolute;width:100%;height:108px;left:0;top:0;background:linear-gradient(99deg,#e9c6ec 40%,#fff0f7 100%);border-radius:16px 16px 20px 20px;box-shadow:0 10px 18px #cbb0d46c;transform-origin:top center; transform:rotateX(0deg);transition:transform .62s cubic-bezier(.52,2.1,.28,1);}
+    .envelope.open .lid {transform:rotateX(-135deg);}
+    .base {position:absolute;width:100%;height:140px;left:0;top:90px;background:linear-gradient(111deg,#fce2ff 70%,#e7f9f3 100%);border-radius:0 0 22px 22px;box-shadow:0 10px 32px #dfb9fc49;}
+    .letter {
+      position:absolute;width:84%;min-width:195px;max-width:93vw;height:auto;min-height:120px;
+      top:77px;left:8%;padding:22px 8px 12px 13px;
+      background:linear-gradient(105deg,#fffbe9,#ffe1f5 100%);
+      border-radius:13px;box-shadow:0 2px 16px #d0b9fa53;
+      font-family:'Dancing Script',cursive;font-size:1.27em;font-weight:400;color:#8d3e7a;opacity:0;transform:translateY(25px) scale(.97);
+      transition:opacity .5s .1s,transform .6s .1s; text-align: left; text-shadow: 0 1px 3px #fff5;
+      line-height: 1.46; white-space: pre-line; word-break: break-word; overflow-wrap: anywhere; pointer-events:none;
+    }
+    .envelope.open .letter {opacity:1;transform:translateY(-9px) scale(1.01);}
+    /* BUTTON -- always visible, below envelope */
+    .open-btn {
+      display: block; margin: 34px auto 18px auto; padding: 13px 50px; font-size: 1.23em;
+      background: linear-gradient(90deg,#f080b2 55%,#fbdaef 95%);
+      color: #fff; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 2px 11px #d7b8f82c;
+      font-family: 'Dancing Script', cursive;
+      position: static;
+      z-index: 99;
+      transition:background .18s;
+    }
+    .open-btn:active {transform:scale(0.97);}
+    .open-btn[disabled] {opacity: 0.3; pointer-events: none;}
+    .nav-group {margin-top:28px;}
+    .nav-link {display:inline-block;margin:0 8px;font-size:1.08em;color:#ad35b2;background:#faf2fc;border-radius:16px;padding:10px 32px;box-shadow:0 2px 10px #dfb6ff33;text-decoration:none;transition:background .13s;}
+    .nav-link:hover {background:#ffd1fa;color:#763c99;}
+    .petal {position:fixed;top:-28px;pointer-events:none;z-index:0;}
+    @media (max-width:460px) {
+      .envelope {width:96vw; min-width:220px;}
+      .lid, .base {width:100%;}
+      .letter {width:85vw; left:5vw;}
+      .open-btn {font-size:1.05em;padding:10px 12vw;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Love Letter</h1>
+    <div class="desc">Click "Open Envelope" to reveal a heartfelt message made just for you.</div>
+    <div class="envelope-wrap">
+      <div class="envelope" id="envelope">
+        <div class="lid"></div>
+        <div class="base"></div>
+        <div class="letter" id="loveLetter">
+My Dearest,
+
+From the first “hello,” you changed the colors of my world.
+
+Loving you is as natural as breathing—gentle, constant, essential. Every moment with you is a page I want to reread a thousand times.
+
+I can’t promise perfect days—but I promise my heart, my care, and undying gratitude for every moment you share with me.
+
+For me, love is you, and always will be.
+
+Yours, forever
+        </div>
+      </div>
+    </div>
+    <!-- THE BUTTON IS ALWAYS BELOW, OUTSIDE THE ENVELOPE-WRAP -->
+    <button class="open-btn" onclick="openEnv()" id="openBtn">Open Envelope</button>
+    <div class="nav-group">
+      <a class="nav-link" href="page8.html">⬅ Previous</a>
+      <a class="nav-link" href="page10.html">Next ➔</a>
+    </div>
+  </div>
+  <script>
+    // Petal animation
+    function makePetal() {
+      let petal = document.createElement('img');
+      petal.src = 'https://cdn.jsdelivr.net/gh/ionic-team/ionicons@7.2.2/src/svg/rose-outline.svg';
+      petal.className = 'petal';
+      petal.style.width = (19 + Math.random() * 17)+'px';
+      petal.style.left = (Math.random() * window.innerWidth)+'px';
+      petal.style.transition = 'top 3.7s ease-out, opacity 1.5s';
+      petal.style.opacity = 0.66 + 0.26 * Math.random();
+      document.body.appendChild(petal);
+      setTimeout(() => {
+        petal.style.top = (window.innerHeight + 35)+'px';
+        petal.style.opacity = 0.1;
+      }, 49);
+      setTimeout(() => petal.remove(), 4100);
+    }
+    setInterval(makePetal, 950);
+
+    // The open envelope logic -- always below envelope
+    function openEnv() {
+      document.getElementById('envelope').classList.add('open');
+      var btn = document.getElementById('openBtn');
+      btn.disabled = true;
+      setTimeout(() => { btn.style.display = "none"; }, 1200);
+    }
+  </script>
+</body>
+</html>

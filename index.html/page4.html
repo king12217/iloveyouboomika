@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=320, initial-scale=1">
+  <title>Virtual Surprise Gifts</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Courgette&family=Roboto:wght@400;700&display=swap');
+    body {margin:0;padding:0;background:linear-gradient(120deg,#ffe9f1 0%,#dff5ff 100%);color:#bf1987;font-family:Roboto,sans-serif;}
+    .container {min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    h1 {margin-top:33px;margin-bottom:10px;font-family:'Courgette',cursive;font-size:2.3em;color:#e8418b;}
+    .desc {margin-bottom:32px;color:#845d74;font-size:1.14em;}
+    .gift-area{display:flex;flex-wrap:wrap;gap:34px;justify-content:center;margin:0 0 24px 0;}
+    .gift-box{background:#fff5fa;box-shadow:0 2px 14px #fbafd855;border-radius:23px;padding:23px 26px 19px 26px;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:transform .11s, box-shadow .18s;}
+    .gift-box:hover{transform:scale(1.07) rotate(-2deg);box-shadow:0 4px 25px #eda2db5e;}
+    .gift-emoji{font-size:3.2em;}
+    .gift-title{color:#c71c77;font-weight:bold;font-size:1.08em;margin-top:13px;}
+    .gift-msg{display:none;margin-top:13px;padding:10px 17px;font-size:1em;background:#e7f9ea;border-radius:13px;color:#398a58;box-shadow:0 1px 7px #c7efdb56;opacity:.98;}
+    .show-msg{display:block;}
+    .bubble {position:absolute;border-radius:50%;background:rgba(255,89,185,0.15);animation: rise linear forwards;pointer-events: none;filter: drop-shadow(0 0 5px #ffcde1);}
+    @keyframes rise{0%{transform:translateY(0) scale(0.7);opacity:0.85;}100%{transform:translateY(-110vh) scale(1.08);opacity:0;}}
+    .nav-group {margin-top:26px;}
+    .nav-link {display:inline-block;margin:0 8px; font-size:1.06em; color:#b8296a; background:#fff2fd; border-radius:20px; padding:8px 22px; box-shadow:0 2px 10px #ffb6c940; text-decoration:none; transition:background.18s;}
+    .nav-link:hover {background:#ffdcee;color:#c23999;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Surprise Gifts For You!</h1>
+    <div class="desc">Click on any gift to open a special message and magical effect ✨</div>
+    <div class="gift-area">
+      <div class="gift-box" onclick="openGift(this, 'flowers')">
+        <div class="gift-emoji">🌹</div>
+        <div class="gift-title">Fresh Flowers</div>
+        <div class="gift-msg" id="msg-flowers">A bouquet of blooms to brighten your day, just like your smile!</div>
+      </div>
+      <div class="gift-box" onclick="openGift(this, 'bear')">
+        <div class="gift-emoji">🧸</div>
+        <div class="gift-title">Cute Bear</div>
+        <div class="gift-msg" id="msg-bear">Here's a teddy hug for when you need one most. I wish I could give it for real!</div>
+      </div>
+      <div class="gift-box" onclick="openGift(this, 'choco')">
+        <div class="gift-emoji">🍫</div>
+        <div class="gift-title">Chocolate</div>
+        <div class="gift-msg" id="msg-choco">Sweet for you—because you’re even sweeter. 🍬</div>
+      </div>
+      <div class="gift-box" onclick="openGift(this, 'letter')">
+        <div class="gift-emoji">💌</div>
+        <div class="gift-title">A Secret Letter</div>
+        <div class="gift-msg" id="msg-letter">“You make every day special.” Just wanted you to know. 💖</div>
+      </div>
+    </div>
+    <div class="nav-group">
+      <a class="nav-link" href="page3.html">⬅ Previous</a>
+      <a class="nav-link" href="page5.html">Next ➔</a>
+    </div>
+  </div>
+  <script>
+    // Magical bubble effect
+    function createBubble() {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      const size = Math.random()*20+16;
+      bubble.style.width=size+'px'; bubble.style.height=size+'px';
+      bubble.style.left=Math.random()*window.innerWidth+'px';
+      bubble.style.animationDuration=6+Math.random()*3+'s';
+      document.body.appendChild(bubble);
+      setTimeout(()=>bubble.remove(),9000);
+    }
+    setInterval(createBubble, 420);
+
+    // Open gift + show sparkle
+    function openGift(el, which) {
+      // Hide all msgs first
+      document.querySelectorAll('.gift-msg').forEach(m=>m.classList.remove('show-msg'));
+      el.querySelector('.gift-msg').classList.add('show-msg');
+
+      // Gift sparkle effect
+      for(let i=0;i<20;i++){
+        let s=document.createElement('span');
+        s.style.position='absolute';s.style.pointerEvents='none';
+        s.style.left=el.getBoundingClientRect().left+80+Math.random()*50+'px';
+        s.style.top=el.getBoundingClientRect().top+50+Math.random()*30+'px';
+        s.style.fontSize='1.3em'; s.style.opacity=0.95;
+        s.innerText=['✨','💖','🌈','💫'][i%4];
+        s.style.transition='all .85s cubic-bezier(.73,0,.34,1)';
+        document.body.appendChild(s);
+        setTimeout(()=>{s.style.top=parseInt(s.style.top)-90+'px'; s.style.opacity=0;},10);
+        setTimeout(()=>s.remove(),1000);
+      }
+    }
+  </script>
+</body>
+</html>

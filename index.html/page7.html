@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=320, initial-scale=1">
+  <title>Romantic Surprises</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Courgette&family=Roboto:wght@400;700&display=swap');
+    body {margin:0;padding:0;background:linear-gradient(120deg,#e3f4fa 20%,#ffe6fe 100%);font-family:Roboto,sans-serif;color:#a757ad;}
+    .container {min-height:100vh;width:100vw;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    h1 {margin-top:44px;font-family:'Dancing Script',cursive;font-size:2.25em;color:#db4f9c;}
+    .desc {margin-bottom:30px;color:#8976a2;font-size:1.14em;text-align:center;}
+    .surprise-box {background:#fff4fd;border-radius:22px;box-shadow:0 4px 17px #dfbbf662;padding:36px 22px 33px 22px;min-height:82px;max-width:345px;font-size:1.19em;font-family:'Courgette',cursive;color:#9951b5;display:flex;align-items:center;justify-content:center;margin-bottom:19px;transition:background .3s;}
+    .from {display:block;text-align:right;color:#b06cb1;font-size:.97em;margin-top:10px;font-family:'Roboto',sans-serif;}
+    .next-btn {padding:13px 37px;background:#da7bec;color:#fff;border:none;border-radius:25px;font-size:1.12em;cursor:pointer;font-family:Roboto,sans-serif;margin-top:5px;box-shadow:0 2px 12px #d7b4f72c;}
+    .next-btn:hover {background:#ad59e7;}
+    .nav-group {margin-top:21px;}
+    .nav-link {display:inline-block;margin:0 8px;font-size:1.06em;color:#b047a3;background:#eae6fc;border-radius:17px;padding:9px 27px;box-shadow:0 2px 10px #bdc6ef40;text-decoration:none;transition:background .14s;}
+    .nav-link:hover {background:#ffd7f2;color:#7c2999;}
+    .bubble {position:absolute;border-radius:50%;background:rgba(181,79,250,0.11);animation: rise linear forwards;pointer-events:none;filter: drop-shadow(0 0 5px #e7dcfb);}
+    @keyframes rise{0%{transform:translateY(0) scale(0.8);opacity:0.64;}100%{transform:translateY(-115vh) scale(1.2);opacity:0;}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Romantic Surprises</h1>
+    <div class="desc">Click “Next” to see sweet lines and surprises just for you—no need to type, just smile and enjoy!</div>
+    <div class="surprise-box" id="surpriseBox">
+      Your smile is my sunrise, your voice is my favorite song.<br>
+      <span class="from">— Yours</span>
+    </div>
+    <button class="next-btn" onclick="nextSurprise()">Next</button>
+    <div class="nav-group">
+      <a class="nav-link" href="page6.html">⬅ Previous</a>
+      <a class="nav-link" href="page8.html">Next ➔</a>
+    </div>
+  </div>
+  <script>
+    // Soft bubble animation
+    function createBubble() {
+      const bubble=document.createElement('div');
+      bubble.className='bubble';
+      const size=Math.random()*19+12;
+      bubble.style.width=size+'px';bubble.style.height=size+'px';
+      bubble.style.left=Math.random()*window.innerWidth+'px';
+      bubble.style.animationDuration=6+Math.random()*3+'s';
+      document.body.appendChild(bubble);
+      setTimeout(()=>bubble.remove(),9000);
+    }
+    setInterval(createBubble,410);
+
+    // Surprises array
+    const surprises = [
+      'Your smile is my sunrise, your voice is my favorite song.<br><span class="from">— Yours</span>',
+      'Meeting you was like discovering a new poem every day.<br><span class="from">— Yours</span>',
+      'When you laugh, the universe seems a little brighter.<br><span class="from">— Yours</span>',
+      'My wish: One more moment with you, always.<br><span class="from">— Yours</span>',
+      'Your eyes are my favorite place to get lost.<br><span class="from">— Yours</span>',
+      'In all the world, your name is my favorite word.<br><span class="from">— Yours</span>',
+      'You are my soft place, my wild adventure, my sweetest dream.<br><span class="from">— Yours</span>',
+      'If I could hold anything forever, it would be your hand.<br><span class="from">— Yours</span>',
+      'Every message from you makes my heart do a happy dance.<br><span class="from">— Yours</span>'
+    ];
+    let idx = 0;
+
+    function nextSurprise() {
+      idx = (idx + 1) % surprises.length;
+      const box = document.getElementById('surpriseBox');
+      box.style.background="#ffffff00";
+      setTimeout(()=>{
+        box.innerHTML = surprises[idx];
+        box.style.background="#fff4fd";
+      },160);
+    }
+  </script>
+</body>
+</html>

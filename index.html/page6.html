@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=320, initial-scale=1">
+  <title>Two Truths and a Dream</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Courgette&family=Roboto:wght@400;700&display=swap');
+    body {margin:0;padding:0;background:linear-gradient(120deg,#fff0f7 0%,#e6f7ff 98%);font-family:Roboto,sans-serif;color:#a743ba;}
+    .container {min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    h1 {margin-top:39px;font-family:'Courgette',cursive;font-size:2.17em;color:#d05faa;}
+    .desc {margin-bottom:23px;color:#735191;font-size:1.09em;}
+    .ttad-list {margin-bottom:28px;width:97%;max-width:340px;}
+    .ttad-item {background:#f8dbff;margin-bottom:14px;padding:14px 13px 13px 19px;border-radius:18px;box-shadow:0 1px 8px #f9b2ee4c;font-size:1.06em;font-family:'Courgette',cursive;color:#854ab6;cursor:pointer;transition:background .14s;}
+    .ttad-item.selected {background:#c6fff6;color:#20bca1;}
+    .add-form{background:#fff;border-radius:18px;box-shadow:0 2px 10px #e0d7fd42;padding:17px 12px;display:flex;flex-direction:column;align-items:center;}
+    .add-form input,.add-form textarea {margin:6px 0 0 0;width:95%;border-radius:12px;border:none;font-size:1.04em;padding:9px 11px;background:#faf2ff;}
+    .add-form textarea{min-height:30px;max-height:60px;}
+    button {margin-top:7px;padding:10px 29px;font-size:1em;background:#e497e4;color:#fff;border:none;border-radius:16px; cursor:pointer;}
+    button:hover {background:#a558e2;}
+    .result-msg {font-size:1.08em;margin-top:12px;color:#14b287;}
+    .nav-group {margin-top:20px;}
+    .nav-link {display:inline-block;margin:0 8px; font-size:1.06em; color:#a235b3; background:#f6ebfa; border-radius:19px; padding:8px 27px; box-shadow:0 2px 10px #fac6ec40; text-decoration:none; transition:background .15s;}
+    .nav-link:hover {background:#c6ffee;color:#6246a6;}
+    .bubble {position:absolute;border-radius:50%;background:rgba(162,98,255,0.08);animation:rise linear forwards;pointer-events:none;filter: drop-shadow(0 0 6px #e5d1fb);}
+    @keyframes rise{0%{transform:translateY(0) scale(0.7);opacity:0.62;}100%{transform:translateY(-110vh) scale(1.10);opacity:0;}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Two Truths and a Dream</h1>
+    <div class="desc">Can you guess which one is the dream? Click a box to find out!</div>
+    <div class="ttad-list">
+      <div class="ttad-item" onclick="reveal(this,false)">I eat pizza with ketchup 🍕</div>
+      <div class="ttad-item" onclick="reveal(this,false)">I've stayed up all night just watching the stars 🌌</div>
+      <div class="ttad-item" onclick="reveal(this,true)">One day, I want to travel the world with you ✈</div>
+    </div>
+    <form class="add-form" id="ttadForm" autocomplete="off">
+      <input type="text" id="t1" placeholder="Truth #1..." maxlength="65" required>
+      <input type="text" id="t2" placeholder="Truth #2..." maxlength="65" required>
+      <input type="text" id="dream" placeholder="Your dream/wish..." maxlength="65" required>
+      <button type="submit">Add New Set</button>
+    </form>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="nav-group">
+      <a class="nav-link" href="page5.html">⬅ About Love</a>
+      <a class="nav-link" href="page7.html">Next ➔</a>
+    </div>
+  </div>
+  <script>
+    // Dreamy bubble effect
+    function createBubble() {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      const size = Math.random()*22+10;
+      bubble.style.width=size+'px'; bubble.style.height=size+'px';
+      bubble.style.left=Math.random()*window.innerWidth+'px';
+      bubble.style.animationDuration=6+Math.random()*3+'s';
+      document.body.appendChild(bubble);
+      setTimeout(()=>bubble.remove(),9000);
+    }
+    setInterval(createBubble,390);
+
+    // Reveal if selected is a dream
+    function reveal(el, isDream) {
+      document.querySelectorAll('.ttad-item').forEach(e=>e.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('resultMsg').textContent = isDream ? "✨ That was the dream! What’s yours? ✨" : "This one's true! 😋";
+    }
+
+    // Add new set of Two Truths and a Dream
+    document.getElementById('ttadForm').onsubmit = function(e) {
+      e.preventDefault();
+      let t1 = document.getElementById('t1').value.trim();
+      let t2 = document.getElementById('t2').value.trim();
+      let dream = document.getElementById('dream').value.trim();
+      if(t1 && t2 && dream) {
+        let container = document.querySelector('.ttad-list');
+        container.innerHTML = `
+          <div class="ttad-item" onclick="reveal(this,false)">${t1}</div>
+          <div class="ttad-item" onclick="reveal(this,false)">${t2}</div>
+          <div class="ttad-item" onclick="reveal(this,true)">${dream}</div>
+        `;
+        document.getElementById('resultMsg').textContent = "";
+        document.getElementById('t1').value = "";
+        document.getElementById('t2').value = "";
+        document.getElementById('dream').value = "";
+      }
+    }
+  </script>
+</body>
+</html>
